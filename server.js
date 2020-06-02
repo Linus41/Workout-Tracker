@@ -1,4 +1,4 @@
-// Add code to userModel.js to complete the model
+//this file holds the express info and backend api routes
 
 const express = require("express");
 const logger = require("morgan");
@@ -7,7 +7,7 @@ const path = require("path");
 
 const PORT = process.env.PORT || 3000;
 
-const workoutModel = require("./Develop/models/index.js");
+const workoutModel = require("./models/workoutModel.js");
 
 const app = express();
 
@@ -23,24 +23,58 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/custommethoddb"
 // Routes
 
 // Route to post our form submission to mongoDB via mongoose
-app.post("/submit", ({body}, res) => {
-  // Create a new user using req.body
-  const user = new User(body);
-  // Update this route to run the `setFullName` and `lastUpdatedDate` methods before creating a new User
-  // You must create these methods in the model.
-  user.setFullName();
-  user.lastUpdatedDate();
+
+//this sends user to exercise.html when "new workout" button is clicked
+app.get("/exercise", (req, res) => {
+  res.sendFile(path.join(__dirname, './public', 'exercise.html'));
+})
+
+//this route isn't getting hit? 
+app.post("/api/workouts", (req, res) => {
+  workoutModel.create(req.body).then((data) => {
+      console.log(data);
+      res.json(data);
+  })
+})
+
+app.get("/stats", (req, res) => {
+  res.sendFile(path.join(__dirname, './public', 'stats.html'));
+})
+//stats api route is the fitness tracker dashboard, which needs to be linked to /stats frontend route
+app.get("/api/stats", (req, res) => {
+  res.sendFile(path.join(__dirname, './public', 'stats.html'));
+})
+
+app.put("/api/workouts/:id", (req, res) => {
+  workoutModel.findOneAndUpdate({
+      _id: req.params.id
+  }, {
+      $push: {
+          exercises: req.body
+      }
+  }).then((data) => {
+      console.log(data);
+      res.json(data);
+  })
+})
+// app.post("/submit", ({body}, res) => {
+//   // Create a new user using req.body
+//   const user = new User(body);
+//   // Update this route to run the `setFullName` and `lastUpdatedDate` methods before creating a new User
+//   // You must create these methods in the model.
+//   user.setFullName();
+//   user.lastUpdatedDate();
   
-  User.create(body)
-    .then(dbUser => {
-      // If saved successfully, send the the new User document to the client
-      res.json(dbUser);
-    })
-    .catch(err => {
-      // If an error occurs, send the error to the client
-      res.json(err);
-    });
-});
+//   User.create(body)
+//     .then(dbUser => {
+//       // If saved successfully, send the the new User document to the client
+//       res.json(dbUser);
+//     })
+//     .catch(err => {
+//       // If an error occurs, send the error to the client
+//       res.json(err);
+//     });
+// });
 
 // Start the server
 app.listen(PORT, () => {
