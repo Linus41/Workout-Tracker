@@ -18,16 +18,21 @@ app.use(express.json());
 
 app.use(express.static("public"));
 
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/custommethoddb", { useNewUrlParser: true, useCreateIndex: true });
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", { useNewUrlParser: true, useCreateIndex: true });
 
 // Routes
 
-// Route to post our form submission to mongoDB via mongoose
-
+//this route doesn't lead to index page?? Oh wait it is, just not connected to style sheet bc of directory reconfig
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, './public', 'index.html'));
+})
 //this sends user to exercise.html when "new workout" button is clicked
 app.get("/exercise", (req, res) => {
   res.sendFile(path.join(__dirname, './public', 'exercise.html'));
 })
+//need a post route for submitting info to mongodb via mongoose?
+
+//need api/workouts/range route?
 
 //this route isn't getting hit? 
 app.post("/api/workouts", (req, res) => {
