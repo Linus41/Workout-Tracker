@@ -47,7 +47,16 @@ app.get("/api/workouts/range", (req, res) => {
     res.json(data);
   })
 })
-
+// api/workouts route
+app.get("/api/workouts", (req, res) => {
+  workoutModel.find()
+    .then(data => {
+      res.json(data);
+    })
+    .catch(err => {
+      res.json(err);
+    });
+}); 
 // route to stats page when "fitness tracker dashboard" is clicked 
 app.get("/stats", (req, res) => {
   res.sendFile(path.join(__dirname, './public', 'stats.html'));
@@ -74,26 +83,6 @@ app.put("/api/workouts/:id", (req, res) => {
     res.json(data);
   })
 })
-
-
-// app.post("/submit", ({body}, res) => {
-//   // Create a new user using req.body
-//   const user = new User(body);
-//   // Update this route to run the `setFullName` and `lastUpdatedDate` methods before creating a new User
-//   // You must create these methods in the model.
-//   user.setFullName();
-//   user.lastUpdatedDate();
-
-//   User.create(body)
-//     .then(dbUser => {
-//       // If saved successfully, send the the new User document to the client
-//       res.json(dbUser);
-//     })
-//     .catch(err => {
-//       // If an error occurs, send the error to the client
-//       res.json(err);
-//     });
-// });
 
 // Start the server
 app.listen(PORT, () => {

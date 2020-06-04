@@ -42,7 +42,27 @@ const WorkoutSchema = new Schema({
         virtuals: true
     }
 });
+// adds a dynamically-created property to schema
+WorkoutSchema.virtual("totalDuration").get(function () {
+    // "reduce" array of exercises down to just the sum of their durations
+    return this.exercises.reduce((total, exercise) => {
+        return total + exercise.duration;
+    }, 0);
+});
 
+WorkoutSchema.virtual("totalDistance").get(function () {
+    // "reduce" array of exercises down to just the sum of their distances
+    return this.exercises.reduce((total, exercise) => {
+        return total + exercise.distance;
+    }, 0);
+});
+
+WorkoutSchema.virtual("totalWeight").get(function () {
+    // "reduce" array of exercises down to just the sum of weight lifted
+    return this.exercises.reduce((total, exercise) => {
+        return total + exercise.weight;
+    }, 0);
+});
 const Workout = mongoose.model("Workout", WorkoutSchema);
 
 module.exports = Workout;
