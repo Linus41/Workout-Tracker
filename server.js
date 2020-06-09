@@ -1,5 +1,3 @@
-//this file holds the express info and backend api routes
-
 const express = require("express");
 const logger = require("morgan");
 const mongoose = require("mongoose");
@@ -22,32 +20,31 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", { use
 
 // Routes
 
-//route to home page
+// route to home page
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, './public', 'index.html'));
-})
+});
 
-//this sends user to exercise.html when "new workout" button is clicked
+// sends user to exercise page
 app.get("/exercise", (req, res) => {
   res.sendFile(path.join(__dirname, './public', 'exercise.html'));
-})
-//need a post route for exercises?
+});
 
-
-// //this route isn't getting hit? 
+// creates new workout
 app.post("/api/workouts", (req, res) => {
   workoutModel.create(req.body).then((data) => {
     res.json(data);
   })
-})
+});
 
-//this displays all objects from db in this path in browser
+// displays all objects from db in this path in browser
 app.get("/api/workouts/range", (req, res) => {
   workoutModel.find(req.body).then((data) => {
     res.json(data);
   })
-})
-// api/workouts route
+});
+
+// finds and displays all workouts
 app.get("/api/workouts", (req, res) => {
   workoutModel.find()
     .then(data => {
@@ -57,20 +54,21 @@ app.get("/api/workouts", (req, res) => {
       res.json(err);
     });
 }); 
-// route to stats page when "fitness tracker dashboard" is clicked 
+
+// sends user to fitness dashboard
 app.get("/stats", (req, res) => {
   res.sendFile(path.join(__dirname, './public', 'stats.html'));
-})
+});
 
-//stats api route is the fitness tracker dashboard, which needs to be linked to /stats frontend route
+// creates new empty row in db 
 app.get("/api/stats", (req, res) => {
   workoutModel.create(req.body).then((data) => {
     console.log(data);
     res.json(data);
   })
+});
 
-})
-
+// finds current workout by id and updates
 app.put("/api/workouts/:id", (req, res) => {
   workoutModel.findOneAndUpdate({
     _id: req.params.id
@@ -84,7 +82,7 @@ app.put("/api/workouts/:id", (req, res) => {
   })
 })
 
-// Start the server
+// Starts the server
 app.listen(PORT, () => {
   console.log(`App running on port ${PORT}!`);
 });
