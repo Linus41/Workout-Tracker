@@ -34,7 +34,7 @@ app.get("/exercise", (req, res) => {
 //need a post route for exercises?
 
 
-//this route isn't getting hit? 
+// //this route isn't getting hit? 
 app.post("/api/workouts", (req, res) => {
   workoutModel.create(req.body).then((data) => {
     res.json(data);
